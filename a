@@ -1,0 +1,38 @@
+-- Adminer 5.4.0 PostgreSQL 18.0 dump
+
+DROP TABLE IF EXISTS "cards";
+DROP SEQUENCE IF EXISTS cards_id_seq;
+CREATE SEQUENCE cards_id_seq INCREMENT 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1;
+
+CREATE TABLE "public"."cards" (
+    "id" integer DEFAULT nextval('cards_id_seq') NOT NULL,
+    "user_id" integer,
+    "card_number" uuid,
+    "card_type" integer,
+    "status" boolean,
+    CONSTRAINT "cards_pkey" PRIMARY KEY ("id")
+)
+WITH (oids = false);
+
+
+DROP TABLE IF EXISTS "users";
+DROP SEQUENCE IF EXISTS users_id_seq;
+CREATE SEQUENCE users_id_seq INCREMENT 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1;
+
+CREATE TABLE "public"."users" (
+    "id" integer DEFAULT nextval('users_id_seq') NOT NULL,
+    "first_name" character varying(100),
+    "last_name" character varying(100),
+    "email" character varying(100),
+    "card_type" integer,
+    "password_hash" character varying(20),
+    CONSTRAINT "users_pkey" PRIMARY KEY ("id")
+)
+WITH (oids = false);
+
+INSERT INTO "users" ("id", "first_name", "last_name", "email", "card_type", "password_hash") VALUES
+(1,	'Joana',	'Tavares',	'joanatavares@gmail.com',	1,	'passe123');
+
+ALTER TABLE ONLY "public"."cards" ADD CONSTRAINT "fk_user" FOREIGN KEY (user_id) REFERENCES users(id) NOT DEFERRABLE;
+
+-- 2025-12-30 23:11:58 UTC
